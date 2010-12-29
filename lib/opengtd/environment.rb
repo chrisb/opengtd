@@ -8,7 +8,7 @@ module OpenGTD
       require 'lib/models/task'
       require 'lib/models/authorization'
       require 'lib/models/session'
-      db_config = YAML::load( File.open('config/database.yml') )['development']
+      db_config = YAML::load( File.open('config/database.yml') )[ENV['RACK_ENV']]
       ActiveRecord::Base.establish_connection(db_config)
     end
   end
