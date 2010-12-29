@@ -1,0 +1,3 @@
+config/database.yml
+config/omniauth.yml
+log/*.log

@@ -1,0 +1,13 @@
+development:
+  adapter: mysql
+  host: localhost
+  username: root
+  password:
+  database: opengtd_development
+
+production:
+  adapter: mysql
+  host: localhost
+  username: root
+  password:
+  database: opengtd_production
