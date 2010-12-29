@@ -26,6 +26,14 @@ module OpenGTD
       erb :login
     end
     
+    get '/supported-clients' do
+      erb :clients
+    end
+    
+    get '/api' do
+      erb :api
+    end
+    
     get '/' do
       redirect '/client' if logged_in?
       erb :home

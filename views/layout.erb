@@ -19,13 +19,13 @@
     <div id='header'>
       <div id='navigation'>
         <h1>opengtd</h1>
-        <a href=''>Home</a> |
-        <a href=''>Create an Account</a> |
-        <a href=''>Web Interface</a> |
-        <a href=''>Supported Clients</a> |
-        <a href=''>API Documentation</a>
+        <a href='/'>Home</a> |
+        <a href='/supported-clients'>Supported Clients</a> |
+        <a href='/api'>API Documentation</a>
         <% if logged_in? %>
           | <a href='/logout'>Log Out</a>
+        <% else %>
+          | <a href='/auth'>Web Interface</a>
         <% end %>
       </div>
       <div class='clear'><!-- --></div>
