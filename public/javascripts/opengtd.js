@@ -20,7 +20,10 @@ function addTask(e) {
   new Ajax.Request( '/v1/tasks/create', {
     method: 'post',
     parameters: $('new-task').serialize(true),
-    onSuccess: function(transport) { reloadDataTable(); }
+    onSuccess: function(transport) { 
+      reloadDataTable();
+      $('#new-task textarea').value = '';
+    }
   });
 }
 
@@ -41,15 +44,15 @@ function toggleCompletion() {
 
 function dataTableColumns() {
   return [
-    { key:'completed', label: '', sortable: false, formatter: formatCheckbox, width: 10, maxAutoWidth: 10, minWidth: 10 },
-    { key:'title', label: 'Task Summary', sortable: true }
+    { key:'completed', label: '', sortable: false, formatter: formatCheckbox, width: 20, maxAutoWidth: 20, minWidth: 20 },
+    { key:'title', label: 'Task Summary', sortable: true, editor: new YAHOO.widget.TextareaCellEditor() }
   ];
 }
 
 function dataTableJSONResponseSchema() {
   return { 
     resultsList: 'tasks',
-    fields: [ 'id', 'title', 'user_id', 'completed', 'tags', 'notes', 'due_on', 'created_at', 'updated_at' ]
+    fields: [ 'id', 'title', 'user_id', 'completed', 'tags', 'notes', { key:'due_on', parser:'date' }, { key:'created_at', parser:'date' }, { key:'updated_at', parser:'date' } ]
   };
 }
 
@@ -66,8 +69,31 @@ function reloadDataTable() {
   tasksDataTable.getDataSource().sendRequest('', { success: tasksDataTable.onDataReturnInitializeTable, scope: tasksDataTable });
 }
 
+function onCellEdit(oArgs) { 
+  var oColumn  = oArgs.editor.getColumn();
+  var column   = oColumn.getKey();
+  var oRecord  = oArgs.editor.getRecord();
+  var newValue = oRecord.getData(column);
+  var row      = this.getRecord(oArgs.target);
+  var task     = oRecord._oData;
+  
+  var task_parameters = {};
+  for (var key in task) {
+    if (task.hasOwnProperty(key)) {
+      task_parameters['task['+key+']'] = task[key];
+    }
+  }
+  
+  new Ajax.Request( '/v1/tasks/'+task.id, {
+    method: 'put',
+    parameters: task_parameters
+  });
+}
+
 function loadDataTable() {
   $('tasks').update();
   tasksDataTable = new YAHOO.widget.DataTable( 'tasks', dataTableColumns(), dataTableDataSource(), { initialRequest: '' } );
   tasksDataTable.subscribe( 'postRenderEvent', setUpBehaviors );
+  tasksDataTable.subscribe( 'cellDblclickEvent', tasksDataTable.onEventShowCellEditor);
+  tasksDataTable.subscribe("editorSaveEvent", onCellEdit );
 }

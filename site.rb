@@ -19,6 +19,7 @@ module OpenGTD
     
     get '/client' do
       redirect '/auth' unless logged_in?
+      @gtd_client = true
       erb :client
     end
     

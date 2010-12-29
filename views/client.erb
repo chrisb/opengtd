@@ -1,13 +1,29 @@
 <div id='content-left'>
+  <div id='sidebar'>
+    <div class='section'>Collect</div>
+    <a href='' class='selected'>Inbox</a>
+    <br/>
+    <div class='section'>Focus</div>
+    <a href=''>Today</a>
+    <a href=''>Next</a>
+    <a href=''>Scheduled</a>
+    <a href=''>Someday</a>
+    <a href=''>Projects</a>
+    <a href=''>Logbook</a>
+    <a href=''>Trash</a>
+  </div>
+</div>
+<div id='content-right'>
   <form id='new-task'>
-    <h1>Add an Item</h1>
-    <textarea name='task[title]'></textarea>
-    <input type='submit' value='Add'>
+    <h1 onClick="$('new-task-fields').toggle();">Add an Item</h1>
+    <div id='new-task-fields' style='display:none;'>
+      <textarea name='task[title]'></textarea>
+      <input type='submit' value='Add Item'>
+      <a href=''>Add Details</a>
+    </div>
+    <div class='clear'><!-- --></div>
   </form>
   <div id='tasks'><!-- --></div>
   <p>Read the article, <a href='http://www.43folders.com/2004/09/08/getting-started-with-getting-things-done'>Getting Started with GTD</a> at <strong>43folders</strong>.</p>
-</div>
-<div id='content-right'>
-  <p>This area will show more detailed information about the selected task. Eventually.</p>
 </div>
 <div class='clear'><!-- --></div>

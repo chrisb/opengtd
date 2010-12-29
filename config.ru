@@ -6,13 +6,15 @@ if ENV['RACK_ENV'] == 'development'
   STDERR.reopen(log)
 end
 
+use Rack::MethodOverride
 use Rack::Static, :urls => [ '/stylesheets', '/images', '/javascripts' ], :root => 'public'
 use Rack::Session::Cookie
 
 auth_config = YAML::load( File.open('config/omniauth.yml') )
 
 use OmniAuth::Builder do
-  provider :twitter, auth_config['twitter']['consumer_key'],  auth_config['twitter']['consumer_secret']
+  provider :twitter, auth_config['twitter']['consumer_key'], auth_config['twitter']['consumer_secret']
+  provider :facebook, auth_config['facebook']['app_id'], auth_config['facebook']['app_secret']
   # provider :open_id, OpenID::Store::Filesystem.new('/tmp')
 end
 

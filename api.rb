@@ -42,6 +42,17 @@ module OpenGTD
       get 'tagged/:tag' do
         # TODO implement searching by tag
       end
+          
+      put ':id' do
+        task_attributes = params[:task]
+        [ :created_at, :updated_at, :user_id, :id ].each { |k| task_attributes.delete(k.to_s) }
+        result = find_task(params[:id]).update_attributes task_attributes
+        puts "---------------------------"
+        pp task_attributes
+        puts result.inspect
+        puts "---------------------------"
+        
+      end
       
       get ':id' do
         find_task params[:id]
