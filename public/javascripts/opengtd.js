@@ -38,6 +38,12 @@ function init() {
       var position, srcEl = this.srcEl;
       YAHOO.util.Dom.setStyle(this.proxyEl, "visibility", "hidden");
       YAHOO.util.Dom.setStyle(srcEl, "visibility", "");
+      
+      var folder = $$('#sidebar a.drag-over').first().id.gsub('sidebar-','');
+      var taskID = this.srcData.id;
+
+      dropTaskInto(taskID,folder);    
+      
       $$('#sidebar a').each(function(e){ e.removeClassName('drag-over'); });
     },
     onDrag: function(e) {
@@ -76,9 +82,52 @@ function init() {
   });
   
   initializeSideBarDragTargets();
+  initializeSideBarLinks();
   loadDataTable();
   
   $('new-task').observe('submit',addTask);
+}
+
+function initializeSideBarLinks() {
+  $$('#sidebar a').each(function(e){ e.observe('click', changeView ); });
+}
+
+function changeView(e) {
+  e.stop();
+  $$('#sidebar a').each(function(e){ e.removeClassName('selected'); });
+  this.addClassName('selected');
+  if(this.id=='sidebar-today') {
+    reloadDataTable('/due_today');
+  }
+}
+
+function dropTaskInto(taskID,folder) {
+  if(folder=='someday') {
+    tagTaskAs(taskID,'someday',function(){});
+  }
+  if(folder=='today') {
+    var currentTime = new Date();
+    var month = currentTime.getMonth() + 1;
+    var day = currentTime.getDate();
+    var year = currentTime.getFullYear();    
+    makeTaskDueOn(taskID,month,day,year,function(){});
+  }
+}
+
+function makeTaskDueOn(taskID,month,day,year,callback) {
+  new Ajax.Request( '/v1/tasks/'+taskID+'/make_due_on/'+month+'/'+day+'/'+year, {
+    method: 'post',
+    parameters: {},
+    onSuccess: callback
+  });
+}
+
+function tagTaskAs(task_id,tag,callback) {
+  new Ajax.Request( '/v1/tasks/'+task_id+'/tags/add', {
+    method: 'post',
+    parameters: { tag: tag },
+    onSuccess: callback
+  });
 }
 
 function formatCheckbox(elCell, oRecord, oColumn, sData) {
@@ -135,9 +184,10 @@ function dataTableDataSource() {
   return dataSource;
 }
 
-function reloadDataTable() {
+function reloadDataTable(request) {
+  if(request==null) request = '';
   tasksDataTable.showTableMessage("Loading...");
-  tasksDataTable.getDataSource().sendRequest('', { success: tasksDataTable.onDataReturnInitializeTable, scope: tasksDataTable });
+  tasksDataTable.getDataSource().sendRequest(request, { success: tasksDataTable.onDataReturnInitializeTable, scope: tasksDataTable });
 }
 
 function initializeSideBarDragTargets() {

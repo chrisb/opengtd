@@ -33,6 +33,12 @@ module OpenGTD
       end
     end
     
+    resource :account do
+      get 'tags' do
+        Task.where(:user_id=>current_user.id).select('tags').map { |t| t.tags }.join(',').split(',')
+      end
+    end
+    
     resource :tasks do
       
       get do
@@ -45,6 +51,10 @@ module OpenGTD
       
       get 'due_on/:month/:day/:year' do
         Task.where(:user_id=>current_user.id).where(:due_on=>[ "?-?-?", params[:year], params[:month], params[:day]])
+      end
+      
+      get 'due_today' do 
+        Task.where(:user_id=>current_user.id).where(:due_on=>Date.today)
       end
           
       put ':id' do
@@ -70,7 +80,7 @@ module OpenGTD
       end
       
       post ':id/make_due_on/:month/:day/:year' do
-        find_task(params[:id]).update_attribute :due_on, Date.parse("#{year}-#{month}-#{day}")
+        find_task(params[:id]).update_attribute :due_on, Date.parse("#{params[:year]}-#{params[:month]}-#{params[:day]}")
       end
       
       post ':id/complete' do
