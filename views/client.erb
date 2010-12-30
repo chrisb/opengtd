@@ -1,16 +1,16 @@
 <div id='content-left'>
   <div id='sidebar'>
     <div class='section'>Collect</div>
-    <a href='' class='selected'>Inbox</a>
+    <a href='' class='selected' id='sidebar-inbox'><span class='icon inbox'><!-- --></span>Inbox</a>
     <br/>
     <div class='section'>Focus</div>
-    <a href=''>Today</a>
-    <a href=''>Next</a>
-    <a href=''>Scheduled</a>
-    <a href=''>Someday</a>
-    <a href=''>Projects</a>
-    <a href=''>Logbook</a>
-    <a href=''>Trash</a>
+    <a href='' id='sidebar-today'><span class='icon today'><!-- --></span>Today</a>
+    <a href='' id='sidebar-next'><span class='icon next'><!-- --></span>Next</a>
+    <a href='' id='sidebar-scheduled'><span class='icon scheduled'><!-- --></span>Scheduled</a>
+    <a href='' id='sidebar-someday'><span class='icon someday'><!-- --></span>Someday</a>
+    <a href='' id='sidebar-projects'><span class='icon projects'><!-- --></span>Projects</a>
+    <a href='' id='sidebar-logbook'><span class='icon logbook'><!-- --></span>Logbook</a>
+    <a href='' id='sidebar-trash'><span class='icon trash'><!-- --></span>Trash</a>
   </div>
 </div>
 <div id='content-right'>
@@ -27,3 +27,7 @@
   <p>Read the article, <a href='http://www.43folders.com/2004/09/08/getting-started-with-getting-things-done'>Getting Started with GTD</a> at <strong>43folders</strong>.</p>
 </div>
 <div class='clear'><!-- --></div>
+<script type="text/javascript" charset="utf-8">
+    less.env = "development";
+    less.watch();
+</script>

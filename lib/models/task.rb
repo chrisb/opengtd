@@ -11,6 +11,18 @@ class Task < ActiveRecord::Base
     save
   end
   
+  def add_tag!(tag)
+    self.tags = tags_array.push(tag)
+    save
+  end
+  
+  def remove_tag!(tag)
+    arr = self.tags_array
+    arr.delete(tag)
+    self.tags = arr
+    save
+  end
+  
   def tags_array
     self.tags.split(',').map { |t| t.strip }
   end

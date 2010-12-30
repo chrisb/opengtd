@@ -42,22 +42,37 @@ module OpenGTD
       get 'tagged/:tag' do
         # TODO implement searching by tag
       end
+      
+      get 'due_on/:month/:day/:year' do
+        Task.where(:user_id=>current_user.id).where(:due_on=>[ "?-?-?", params[:year], params[:month], params[:day]])
+      end
           
       put ':id' do
         task_attributes = params[:task]
         [ :created_at, :updated_at, :user_id, :id ].each { |k| task_attributes.delete(k.to_s) }
-        result = find_task(params[:id]).update_attributes task_attributes
-        puts "---------------------------"
-        pp task_attributes
-        puts result.inspect
-        puts "---------------------------"
-        
+        result = find_task(params[:id]).update_attributes task_attributes        
       end
       
       get ':id' do
         find_task params[:id]
       end
 
+      post ':id/tags/:action' do
+        task = find_task(params[:id])
+        case params[:action]
+        when 'add'
+          task.add_tag!(params[:tag])
+        when 'remove'
+          task.remove_tag!(params[:tag])
+        else
+          error!('Uknown Tag Action',500)
+        end
+      end
+      
+      post ':id/make_due_on/:month/:day/:year' do
+        find_task(params[:id]).update_attribute :due_on, Date.parse("#{year}-#{month}-#{day}")
+      end
+      
       post ':id/complete' do
         find_task(params[:id]).update_attribute :completed, true
       end
